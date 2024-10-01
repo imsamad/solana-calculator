@@ -10,10 +10,10 @@ import {
     TransactionInstruction,
   } from "@solana/web3.js";
   import { getKeypairFromFile } from "@solana-developers/helpers";
-
+import {BN} from "bn.js"
   async function main() {
     try {
-      const programId = new PublicKey("CynKtZ1WMrnVULFTeDQdPhrE7HAFhP2UUALWFqDUa6S3");
+      const programId = new PublicKey("8difcQwqE5ZbzbMzNr9VFrP4K5MbzVckkLnGDFV8gukZ");
        
       // Connect to a solana cluster. Either to your local test validator or to devnet
       const connection = new Connection("http://localhost:8899", "confirmed");
@@ -59,9 +59,19 @@ import {
           ...blockhashInfo,
           feePayer:keyPair.publicKey
         });
-        
-        
-      //   // Add our Hello World instruction
+         const numberToBuffer = (num:number) => {
+          const bn = new BN(num);
+          const bnArr = bn.toArray().reverse();
+          const bnBuffer = Buffer.from(bnArr);
+          const zeroPad = Buffer.alloc(4);
+          bnBuffer.copy(zeroPad);
+          return zeroPad
+         } 
+
+        const buffers = [Buffer.from(Int8Array.from([0])), numberToBuffer(5)]
+         const data = Buffer.concat(buffers);
+
+        //   // Add our Hello World instruction
         tx.add(
           new TransactionInstruction({
             programId: programId,
@@ -72,7 +82,7 @@ import {
                   isWritable: true,
               },
           ],
-            data: Buffer.from([]),
+            data:data,
           }),
         );
   
