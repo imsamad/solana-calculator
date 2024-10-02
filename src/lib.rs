@@ -28,6 +28,7 @@ pub fn process_instruction(
 ) -> entrypoint::ProgramResult {
     // log a message to the blockchain
     msg!("Hello, world!");
+
     if accounts.is_empty() {
         msg!("Error: No accounts passed to the instruction");
         return Err(ProgramError::NotEnoughAccountKeys);
@@ -35,7 +36,7 @@ pub fn process_instruction(
 
     let instruction = CalculatorInstruction::try_from_slice(instruction_data)
         .map_err(|_| ProgramError::InvalidInstructionData)?;
-
+    
     let account_iter = &mut accounts.iter();
 
     let accout = next_account_info(account_iter)?;
@@ -58,13 +59,13 @@ pub fn process_instruction(
     match instruction {
         CalculatorInstruction::Add { data } => {
             msg!("Adding data");
-            greeting_accout.counter+=data;
+            greeting_accout.counter += data;
         }
         CalculatorInstruction::Subtract { data } => {
             msg!("Substracting data");
-            greeting_accout.counter-=data
+            greeting_accout.counter -= data
         }
-    }    
+    }
 
     // greeting_accout.counter += 1;
     greeting_accout
